@@ -9,13 +9,25 @@ $(document).ready(function (e) {
 
 	//Print out stored successes and errors
 	var printSuccess = function(data) {
-		//TODO
+		var $resp = $("<div>");
+		var $header = $("<h1>");
+		$header.text("Success!");
+		$resp.append($header);
+		var $msg = $("<p>");
+		$msg.text("Server says:" + data.message);
+		$resp.append($msg);
 	}
 	successes.forEach(printSuccess);
 
 
 	var printError = function(data) {
-		//TODO
+		var $resp = $("<div>");
+		var $header = $("<h1>");
+		$header.text("Error!");
+		$resp.append($header);
+		var $msg = $("<p>");
+		$msg.text(data.status + ": " + data.error);
+		$resp.append($msg);
 	}
 	errors.forEach(printError);
 
@@ -35,11 +47,13 @@ $(document).ready(function (e) {
 			contentType: false,
 			processData: false,
 			success: function(data) {
+				data = JSON.stringify(data.responseText);
 				printSuccess(data);
 				successes.push(data);
 				localStorage.setItem(successKey, successes);
 			},
-			error: function(data) {
+			error: function(_, statusText, errorMsg) {
+				var data = {status: statusText, error: ErrorMsg};
 				printError(data);
 				errors.push(data);
 				localStorage.setItem(errorKey, errors);
